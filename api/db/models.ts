@@ -1,5 +1,4 @@
 export interface ITransaction {
-  tx_id: number;
   hash: string;
   ledger_index: number;
   timestamp: Date;

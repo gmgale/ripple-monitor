@@ -11,7 +11,7 @@ export class ApiController {
     // Check the transaction matches the expected format
     if (ApiService.isTransaction(transaction)) {
       // Handle the transaction here
-      console.log(transaction);
+      ApiService.storeTransaction(transaction);
     } else {
       // Handle the error here
       console.log('Invalid transaction format');

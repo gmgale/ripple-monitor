@@ -43,10 +43,21 @@ export class TransactionsRepository {
 
   // Adds a new record and returns the full object;
   // It is also an example of mapping HTTP requests into query parameters;
-  add(values: { userId: number; name: string }): Promise<ITransaction> {
+  add(values: {
+    hash: string;
+    ledger_index: number;
+    timestamp: Date;
+    amount: number;
+    sender_address: string;
+    receiver_address: string;
+  }): Promise<ITransaction> {
     return this.db.one(sql.add, {
-      userId: +values.userId,
-      transactionName: values.name,
+      hash: values.hash,
+      ledger_index: values.ledger_index,
+      timestamp: values.timestamp,
+      amount: values.amount,
+      sender_address: values.sender_address,
+      receiver_address: values.receiver_address,
     });
   }
 
