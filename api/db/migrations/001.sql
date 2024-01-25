@@ -1,8 +1,8 @@
-CREATE TABLE xrp_transactions (
+CREATE TABLE xrp_transaction (
                                   tx_id SERIAL PRIMARY KEY,
                                   hash VARCHAR(64) UNIQUE,
                                   ledger_index BIGINT,
-                                  timestamp TIMESTAMP,
+                                  timestamp TIMESTAMPTZ,
                                   amount DECIMAL(20, 10),
                                   sender_address VARCHAR(64),
                                   receiver_address VARCHAR(64)
