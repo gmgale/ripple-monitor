@@ -1,4 +1,4 @@
 /*
-    Quickly deletes all records from table Products.
+    Quickly deletes all records from table transactions.
 */
 TRUNCATE TABLE transactions;

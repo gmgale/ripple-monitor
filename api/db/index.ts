@@ -4,6 +4,8 @@ import { Diagnostics } from './diagnostics'; // optional diagnostics
 import { IInitOptions, IDatabase, IMain } from 'pg-promise';
 import { IExtensions, TransactionsRepository } from './repos';
 
+// See https://github.com/vitaly-t/pg-promise-demo/
+
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
 
 // pg-promise initialization options:
@@ -15,7 +17,7 @@ const initOptions: IInitOptions<IExtensions> = {
 
     // Do not use 'require()' here, because this event occurs for every task and transaction being executed,
     // which should be as fast as possible.
-    obj.transactions = new TransactionsRepository(obj, pgp);
+    obj.users = new TransactionsRepository(obj, pgp);
   },
 };
 

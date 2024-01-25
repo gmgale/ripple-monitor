@@ -16,8 +16,12 @@ import { join } from 'path';
 // is very easy to overcome by using only Named Parameters for your query formatting.
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const users = {
+export const transactions = {
   create: sql('transactions/create.sql'),
+  drop: sql('transactions/drop.sql'),
+  empty: sql('transactions/empty.sql'),
+  find: sql('transactions/find.sql'),
+  add: sql('transactions/add.sql'),
 };
 
 ///////////////////////////////////////////////

@@ -1,4 +1,4 @@
 /*
-    Drops the entire table Products.
+    Drops the entire table transactions.
 */
 DROP TABLE transactions;

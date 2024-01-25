@@ -1,4 +1,4 @@
-CREATE TABLE xrp_transaction (
+CREATE TABLE transactions (
                                   tx_id SERIAL PRIMARY KEY,
                                   hash VARCHAR(64) UNIQUE,
                                   ledger_index BIGINT,

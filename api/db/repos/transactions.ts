@@ -53,17 +53,21 @@ export class TransactionsRepository {
   // Tries to delete a transaction by id, and returns the number of records deleted;
   remove(id: number): Promise<number> {
     return this.db.result(
-      'DELETE FROM transactions WHERE id = $1',
+      'DELETE FROM transactions WHERE tx_id = $1',
       +id,
       (r: IResult) => r.rowCount,
     );
   }
 
-  // Tries to find a user transaction from user id + transaction name;
-  find(values: { userId: number; name: string }): Promise<ITransaction | null> {
-    return this.db.oneOrNone(sql.find, {
-      userId: +values.userId,
-      transactionName: values.name,
+  // Tries to find a transaction from sender_address and receiver_address,
+  // and returns the found record;
+  find(values: {
+    sender_address: string;
+    receiver_address: string;
+  }): Promise<ITransaction> {
+    return this.db.result(sql.find, {
+      sender_address: values.sender_address,
+      receiver_address: values.receiver_address,
     });
   }
 

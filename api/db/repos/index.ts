@@ -1,11 +1,8 @@
-import {TransactionsRepository} from './transactions';
+import { TransactionsRepository } from './transactions';
 
 // Database Interface Extensions:
 interface IExtensions {
-  users: TransactionsRepository,
+  users: TransactionsRepository;
 }
 
-export {
-  IExtensions,
-  TransactionsRepository,
-};
+export { IExtensions, TransactionsRepository };
