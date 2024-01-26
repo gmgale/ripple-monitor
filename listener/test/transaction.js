@@ -37,10 +37,8 @@ async function main() {
 
     // Sign prepared instructions ------------------------------------------------
     const signed = wallet1.sign(transaction);
-
-    const result = await client.submitAndWait(signed.tx_blob);
+    await client.submitAndWait(signed.tx_blob);
     console.log('Test script: Transaction successful! ✅');
-    console.log(result.result);
 
     // Disconnect from the XRP Ledger
     await client.disconnect();
