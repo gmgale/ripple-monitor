@@ -1,9 +1,9 @@
 export type Transaction = {
-  tx_id: number;
   hash: string;
   ledger_index: number;
   timestamp: Date;
   amount: number;
+  fee: string;
   sender_address: string;
   receiver_address: string;
 };

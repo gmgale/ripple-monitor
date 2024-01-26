@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiKeyGuard } from '../guards/ApiKeyGuard';
 import { Transaction } from './transaction';
 import { ApiService } from './api.service';
@@ -14,7 +14,7 @@ export class ApiController {
       ApiService.storeTransaction(transaction);
     } else {
       // Handle the error here
-      console.log('Invalid transaction format');
+      Logger.error('Invalid transaction');
     }
   }
 }

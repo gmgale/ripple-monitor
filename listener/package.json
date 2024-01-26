@@ -1,5 +1,5 @@
 {
-  "name": "ripple-monitor-api",
+  "name": "ripple-monitor-listener",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -24,8 +24,11 @@
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "xrpl": "^2.14.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
