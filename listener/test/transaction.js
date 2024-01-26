@@ -3,7 +3,7 @@
 const xrpl = require('xrpl');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: './test/.env.test' }); // Load environment variables from .env.test file
+dotenv.config({ path: './test/testWallets' }); // Load environment variables from testWallets file
 
 // Connect to the XRP Ledger (Testnet in this example)
 const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');

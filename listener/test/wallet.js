@@ -4,7 +4,7 @@ const xrpl = require('xrpl');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
-const envPath = './test/.env.test';
+const envPath = './test/testWallets';
 
 console.log('Connected to XRP Ledger');
 
@@ -46,7 +46,7 @@ async function generateAndFundWallet(walletIndex) {
 
 async function main() {
   try {
-    // Load the .env.test file
+    // Load the testWallets file
     dotenv.config({ path: envPath });
 
     await client.connect();

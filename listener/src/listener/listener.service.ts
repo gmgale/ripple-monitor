@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Client } from 'xrpl';
+import * as process from 'process';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const xrpl = require('xrpl');
 
@@ -50,7 +51,10 @@ export class ListenerService {
 
   getAddresses(): string[] {
     // TODO: Get the addresses from the database
-    return ['rhXHBiyX4hf1CZ2bJEakcpkjuj5zCh7W6o'];
+    const testAddress = process.env.WALLET_1_ADDRESS;
+    Logger.log('testAddress: ' + testAddress);
+    // @ts-expect-error process.env is possible undefined
+    return [testAddress];
   }
 
   async stopListening() {
