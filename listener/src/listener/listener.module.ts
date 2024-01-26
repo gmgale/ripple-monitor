@@ -4,6 +4,6 @@ import { ListenerService } from './listener.service';
 
 @Module({
   controllers: [ListenerController],
-  providers: [ListenerService]
+  providers: [ListenerService],
 })
 export class ListenerModule {}

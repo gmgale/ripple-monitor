@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Transaction } from './transaction';
 import { db } from '../../db';
 
@@ -25,7 +25,7 @@ export class ApiService {
         console.log(data.tx_id); // print new transaction id;
       })
       .catch((error) => {
-        console.log('ERROR:', error); // print error;
+        Logger.log(error);
       });
   }
 }
