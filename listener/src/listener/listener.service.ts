@@ -18,8 +18,6 @@ export class ListenerService {
 
   async listen() {
     this.client.connection.on('transaction', (tx) => {
-      // TODO: Send the transaction to the database
-      console.log({ tx });
       this.processTransaction(tx);
     });
   }
@@ -41,8 +39,6 @@ export class ListenerService {
     if (!baseUrl || !endpoint) {
       throw Error('Missing environment variables');
     }
-
-    console.log(data);
 
     const config = {
       method: 'post',
@@ -77,7 +73,7 @@ export class ListenerService {
           accounts: [acc],
         });
       } catch (error) {
-        console.log({
+        Logger.log({
           error: error.data.error_message,
           account: error.data.request.accounts,
         });
@@ -87,7 +83,7 @@ export class ListenerService {
     Logger.log('Subscribed to accounts: ' + accounts);
   }
   catch(error: { data: { error_message: any } }) {
-    console.log({
+    Logger.log({
       error: error.data.error_message,
     });
   }

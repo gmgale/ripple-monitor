@@ -22,7 +22,7 @@ export class ApiService {
       transaction,
     )
       .then((data) => {
-        console.log(data.tx_id); // print new transaction id;
+        Logger.log(data.tx_id); // print new transaction id;
       })
       .catch((error) => {
         Logger.log(error);
