@@ -1,50 +1,54 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // transaction.js
-const {
-  XrplClient,
-  XrplNetwork,
-  XrplWallet,
-  XrplTransaction,
-  XrplAmount,
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-} = require('xrpl');
-import dotenv from 'dotenv';
+const xrpl = require('xrpl');
+const dotenv = require('dotenv');
 
-dotenv.config(); // Load environment variables from .env.test file
+dotenv.config({ path: './test/.env.test' }); // Load environment variables from .env.test file
+
+// Connect to the XRP Ledger (Testnet in this example)
+const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
 
 async function main() {
   try {
-    const walletAddress = process.env.TEST_WALLET_ADDRESS;
-
-    // Connect to the XRP Ledger (Testnet in this example)
-    const client = new XrplClient(XrplNetwork.Test);
     await client.connect();
     console.log('Connected to XRP Ledger');
 
-    // Generate a new wallet
-    const wallet2 = XrplWallet.generate();
-    console.log('Wallet 2 address:', wallet2.address);
+    const wallet1 = xrpl.Wallet.fromSeed(process.env.WALLET_1_SEED);
+    const wallet2 = xrpl.Wallet.fromSeed(process.env.WALLET_2_SEED);
+
+    console.log(wallet1.address);
+    console.log(wallet2.address);
 
     // Create a Payment transaction from wallet1 to wallet2
-    const paymentTx = new XrplTransaction.Payment({
-      account: walletAddress,
-      amount: new XrplAmount('1000000 drops'), // Sending 1 XRP
-      destination: wallet2.address,
+    const transaction = await client.autofill({
+      TransactionType: 'Payment',
+      Account: wallet1.address,
+      Amount: xrpl.dropsToXrp('1000000'), // 1,000,000 drops = 1 XRP
+      Destination: wallet2.address,
     });
 
-    // Sign the transaction with wallet1's secret
-    paymentTx.sign(process.env.WALLET_SECRET);
+    try {
+      await client.autofill(transaction);
+      const { tx_blob: signed_tx_blob, hash } = wallet1.sign(transaction);
+      // Logger.log(signed_tx_blob, "TxService");
+    } catch (error) {
+      console.error(`Failed to sign transaction: ${error}`);
+    }
 
-    // Submit the transaction to the XRP Ledger
-    const submissionResult = await client.submitTransaction(paymentTx);
-    console.log('Transaction submitted...');
-    console.log('Transaction result:', submissionResult);
-    console.log('Transaction hash:', submissionResult.hash);
+    // Sign prepared instructions ------------------------------------------------
+    const signed = wallet1.sign(transaction);
+
+    const result = await client.submitAndWait(signed.tx_blob);
+    console.log('Test script: Transaction successful! ✅');
+    console.log(result.result);
 
     // Disconnect from the XRP Ledger
     await client.disconnect();
     console.log('Disconnected from XRP Ledger');
   } catch (error) {
     console.error('Error:', error);
+    await client.disconnect();
+    process.exit(1);
   }
 }
 

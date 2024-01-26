@@ -1,26 +1,44 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // wallet.js
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { XrplClient, XrplNetwork, XrplWallet } = require('xrpl');
-import dotenv from 'dotenv';
-import fs from 'fs';
+const xrpl = require('xrpl');
+const dotenv = require('dotenv');
+const fs = require('fs');
+const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+const envPath = './test/.env.test';
 
-dotenv.config(); // Load environment variables from .env file
+console.log('Connected to XRP Ledger');
 
-async function fundWallet(walletAddress) {
+async function fundWallet(wallet) {
   try {
-    // Connect to the XRP Ledger (Testnet in this example)
-    const client = new XrplClient(XrplNetwork.Test);
-    await client.connect();
-    console.log('Connected to XRP Ledger');
-
     // Use the XRP Testnet Faucet to fund the wallet
-    console.log(`Requesting Test XRP for wallet: ${walletAddress}`);
-    const faucetResponse = await client.fundWallet(walletAddress);
+    console.log(`Requesting Test XRP for wallet: ${wallet.classicAddress}`);
+    const faucetResponse = await client.fundWallet(wallet);
     console.log('Faucet response:', faucetResponse);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
-    // Disconnect from the XRP Ledger
-    await client.disconnect();
-    console.log('Disconnected from XRP Ledger');
+async function generateAndFundWallet(walletIndex) {
+  try {
+    // Generate a new wallet
+    const wallet = xrpl.Wallet.generate();
+    console.log(`Generated wallet: ${wallet.classicAddress}`);
+
+    // Write the wallet address to .env file
+    dotenv.config({ path: envPath }); // Reload .env file
+
+    // overwrite the TEST_WALLET_ADDRESS variable
+    fs.writeFileSync(
+      envPath,
+      `WALLET_${walletIndex}_ADDRESS=${wallet.classicAddress}\nWALLET_${walletIndex}_SEED=${wallet.seed}\n`,
+      {
+        flag: 'a',
+      },
+    );
+
+    // Fund the wallet
+    await fundWallet(wallet);
   } catch (error) {
     console.error('Error:', error);
   }
@@ -28,16 +46,17 @@ async function fundWallet(walletAddress) {
 
 async function main() {
   try {
-    // Generate a new wallet
-    const wallet = XrplWallet.generate();
-    console.log('Wallet address:', wallet.address);
+    // Load the .env.test file
+    dotenv.config({ path: envPath });
 
-    // Write the wallet address to .env file
-    dotenv.config(); // Reload .env file
-    fs.writeFileSync('.env.test', `TEST_WALLET_ADDRESS=${wallet.address}`);
+    await client.connect();
 
-    // Fund the wallet
-    await fundWallet(wallet.address);
+    // Generate and fund two wallets
+    for (let i = 1; i <= 2; i++) {
+      await generateAndFundWallet(i);
+    }
+    await client.disconnect();
+    console.log('Disconnected from XRP Ledger');
   } catch (error) {
     console.error('Error:', error);
   }
