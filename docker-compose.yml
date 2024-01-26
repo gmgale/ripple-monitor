@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:15.1
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./api/db/sql:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+  api:
+    build: ./api
+    env_file:
+      - ./api/.env
+    restart: always
+    ports:
+      - '${API_PORT:-3000}:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+    volumes:
+      - .:/app
+
+  listener:
+    build: ./listener
+    env_file:
+      - ./listener/.env
+    restart: always
+    ports:
+      - '${LISTENER_PORT:-3001}:3001'
+    depends_on:
+      db:
+        condition: service_healthy
+        # TODO: Add healthcheck endpoint to api
+    networks:
+      - default
+    volumes:
+      - .:/app
+      - ./test:/app/test # We can run transaction.js to test the listener
+
+volumes:
+  database:
+
+networks:
+  default:
