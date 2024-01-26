@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Client } from 'xrpl';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const xrpl = require('xrpl');
 
 @Injectable()
