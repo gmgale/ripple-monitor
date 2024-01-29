@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Client } from 'xrpl';
+import { Client, Transaction } from 'xrpl';
 import * as process from 'process';
 import axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -10,14 +10,17 @@ export class ListenerService {
   client: Client;
 
   async startListening() {
+    this.client = new xrpl.Client(process.env.XRPL_CLIENT);
+    await this.client.connect();
+
     const addresses = this.getAddresses();
-    await this.subscribe(addresses);
     await this.listen();
+    await this.subscribe(addresses);
     Logger.log('Listening for transactions ✅');
   }
 
   async listen() {
-    this.client.connection.on('transaction', (tx) => {
+    this.client.connection.on('transaction', (tx: Transaction) => {
       this.processTransaction(tx);
     });
   }
@@ -62,9 +65,6 @@ export class ListenerService {
   }
 
   async subscribe(accounts: Array<string>): Promise<void> {
-    this.client = new xrpl.Client(process.env.XRPL_CLIENT);
-    await this.client.connect();
-
     for (const acc of accounts) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
