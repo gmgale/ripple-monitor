@@ -24,6 +24,10 @@ export const transactions = {
   add: sql('transactions/add.sql'),
 };
 
+export const wallets = {
+  add: sql('wallets/add.sql'),
+};
+
 ///////////////////////////////////////////////
 // Helper for linking to external query files;
 function sql(file: string): QueryFile {

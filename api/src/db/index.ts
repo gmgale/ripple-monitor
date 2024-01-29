@@ -1,8 +1,11 @@
-import * as dbConfig from '../../db-config.json'; // db connection details
 import * as pgPromise from 'pg-promise'; // pg-promise core library
 import { Diagnostics } from './diagnostics'; // optional diagnostics
 import { IInitOptions, IDatabase, IMain } from 'pg-promise';
-import { IExtensions, TransactionsRepository } from './repos';
+import {
+  IExtensions,
+  TransactionsRepository,
+  WalletsRepository,
+} from './repos';
 
 // See https://github.com/vitaly-t/pg-promise-demo/
 
@@ -17,7 +20,8 @@ const initOptions: IInitOptions<IExtensions> = {
 
     // Do not use 'require()' here, because this event occurs for every task and transaction being executed,
     // which should be as fast as possible.
-    obj.users = new TransactionsRepository(obj, pgp);
+    obj.transactions = new TransactionsRepository(obj, pgp);
+    obj.wallets = new WalletsRepository(obj, pgp);
   },
 };
 
@@ -25,7 +29,12 @@ const initOptions: IInitOptions<IExtensions> = {
 const pgp: IMain = pgPromise(initOptions);
 
 // Creating the database instance with extensions:
-const db: ExtendedProtocol = pgp(dbConfig);
+const db: ExtendedProtocol = pgp({
+  host: '',
+  port: 5432,
+  user: 'postgres',
+  password: 'postgres',
+});
 
 // Initializing optional diagnostics:
 Diagnostics.init(initOptions);

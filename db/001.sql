@@ -8,3 +8,8 @@ CREATE TABLE transactions (
                                   sender_address VARCHAR(64),
                                   receiver_address VARCHAR(64)
 );
+
+CREATE TABLE wallets (
+                                  wallet_id SERIAL PRIMARY KEY,
+                                  address VARCHAR(64) UNIQUE
+);
