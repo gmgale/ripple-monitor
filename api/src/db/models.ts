@@ -6,3 +6,7 @@ export interface ITransaction {
   sender_address: string;
   receiver_address: string;
 }
+
+export interface IWallet {
+  address: string;
+}
