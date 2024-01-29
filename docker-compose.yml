@@ -5,7 +5,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./api/db/sql:/docker-entrypoint-initdb.d/
+      - ./db:/docker-entrypoint-initdb.d/
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
@@ -29,8 +29,6 @@ services:
         condition: service_healthy
     networks:
       - default
-    volumes:
-      - .:/app
 
   listener:
     build: ./listener
@@ -45,12 +43,6 @@ services:
         # TODO: Add healthcheck endpoint to api
     networks:
       - default
-    volumes:
-      - .:/app
-      - ./test:/app/test # We can run transaction.js to test the listener
-
-volumes:
-  database:
 
 networks:
   default:

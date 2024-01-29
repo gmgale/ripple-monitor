@@ -2,14 +2,11 @@ FROM node:18 as builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json tsconfig.json tsconfig.build.json ./
+COPY package.json package-lock.json tsconfig.json tsconfig.build.json nest-cli.json ./
 
 RUN npm ci
 
 COPY src/ ./src
-COPY db/ ./db
-COPY .env.example ./.env
-COPY ./db-config.json ./
 
 RUN npm run build
 
@@ -18,10 +15,10 @@ FROM node:18.12.1-slim as app
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY .env.example ./.env
 
 RUN npm ci --omit=dev
 
 COPY --from=builder ./app/dist/ ./dist/
 
 ENTRYPOINT ["node", "./dist/main.js"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
