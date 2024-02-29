@@ -37,34 +37,38 @@ export class ApiService {
   }
 
   static listenToNewWallet(wallet: Wallet) {
-    const data = JSON.stringify({
-      address: wallet.address,
-    });
-
-    const listenerUrl = process.env.LISTENER_URL;
-
-    if (!listenerUrl) {
-      throw Error('Missing environment variable LISTENER_URL');
-    }
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: listenerUrl,
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': process.env.API_KEY,
-      },
-      data: data,
-    };
-
-    axios
-      .request(config)
-      .then((response: { data: any }) => {
-        Logger.log(response.data);
-      })
-      .catch((error: any) => {
-        Logger.log(error);
+    try {
+      const data = JSON.stringify({
+        address: wallet.address,
       });
+
+      const listenerUrl = process.env.LISTENER_URL;
+
+      if (!listenerUrl) {
+        throw Error('Missing environment variable LISTENER_URL');
+      }
+
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: listenerUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': process.env.API_KEY,
+        },
+        data: data,
+      };
+
+      axios
+        .request(config)
+        .then((response: { data: any }) => {
+          Logger.log(response.data);
+        })
+        .catch((error: any) => {
+          Logger.log(error);
+        });
+    } catch (error) {
+      Logger.log(error);
+    }
   }
 }
