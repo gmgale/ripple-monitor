@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { RabbitMQProducerService } from '../rabbitmq-producer/rabbitmq-producer.service';
 import { Client, Transaction } from 'xrpl';
 import * as process from 'process';
 import axios from 'axios';
@@ -7,6 +8,10 @@ const xrpl = require('xrpl');
 
 @Injectable()
 export class ListenerService {
+  constructor(
+    private readonly rabbitMQProducerService: RabbitMQProducerService,
+  ) {}
+
   client: Client;
 
   async startListening() {
@@ -21,11 +26,12 @@ export class ListenerService {
 
   async listen() {
     this.client.connection.on('transaction', (tx: Transaction) => {
-      this.processTransaction(tx);
+      // this.processTransactionAPI(tx);
+      this.processTransactionQueue(tx);
     });
   }
 
-  async processTransaction(tx: any) {
+  async processTransactionAPI(tx: any) {
     const data = JSON.stringify({
       hash: tx.transaction.hash,
       ledger_index: tx.ledger_index,
@@ -99,5 +105,13 @@ export class ListenerService {
   async stopListening() {
     await this.client.disconnect();
     Logger.log('Client disconnected');
+  }
+
+  private async processTransactionQueue(tx: Transaction) {
+    await this.rabbitMQProducerService.sendMessage(
+      'transactions',
+      JSON.stringify(tx),
+    );
+    return 'Message sent successfully';
   }
 }

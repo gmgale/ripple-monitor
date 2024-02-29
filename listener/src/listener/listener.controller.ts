@@ -12,4 +12,6 @@ export class ListenerController implements OnModuleInit, OnModuleDestroy {
   onModuleDestroy() {
     this.listenerService.stopListening();
   }
+
+  // Add a post route to the listener controller to listen to new wallets
 }
