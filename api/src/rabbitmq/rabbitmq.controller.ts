@@ -1,14 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, OnModuleInit } from '@nestjs/common';
 import { RabbitMQService } from './rabbitmq.service';
+import { Logger } from '@nestjs/common';
 
 @Controller()
-export class AppController {
+export class RabbitmqController implements OnModuleInit {
   constructor(private readonly rabbitMQService: RabbitMQService) {}
 
-  @Get()
-  async consumeMessages() {
-    await this.rabbitMQService.consumeQueue('transactions', (msg) => {
-      console.log(`Received message: ${msg}`);
+  onModuleInit() {
+    this.rabbitMQService.consumeQueue('transactions', (msg) => {
+      Logger.log(`Received message: ${msg}`);
       // Process your message here
     });
   }
