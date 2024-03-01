@@ -3,8 +3,7 @@ import * as amqp from 'amqplib';
 
 @Injectable()
 export class RabbitMQService {
-  private readonly rabbitUrl: string =
-    process.env.RABBIT_URL || 'amqp://localhost';
+  private readonly rabbitUrl: any = process.env.RABBIT_URL;
 
   async consumeQueue(
     queueName: string,
